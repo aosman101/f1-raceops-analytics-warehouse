@@ -44,7 +44,6 @@ A local-first **Formula 1 RaceOps analytics warehouse** that turns Ergast-style 
 ## Architecture
 ```mermaid
 flowchart LR
-  A[Download dataset (Ergast 2024)] --> B[Ingest CSV/SQL]
   B --> C[(Postgres: raw schema)]
   C --> D[dbt staging models]
   D --> E[dbt marts: analytics schema]
