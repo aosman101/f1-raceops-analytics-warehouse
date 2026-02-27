@@ -1,0 +1,27 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Env
+.env
+
+# Data (do NOT commit raw datasets)
+data/raw/
+*.zip
+*.gz
+*.bz2
+
+# dbt
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+
+# OS / editor
+.DS_Store
+.vscode/
+
+# BI files (optional: keep out of git; store screenshots instead)
+*.pbix
+*.twb
+*.twbx
