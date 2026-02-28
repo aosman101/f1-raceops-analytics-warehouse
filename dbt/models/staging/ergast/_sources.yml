@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: ergast
+    schema: raw
+    tables:
+      - name: circuits
+      - name: constructors
+      - name: drivers
+      - name: races
+      - name: results
+      - name: pit_stops
+      - name: lap_times
+      - name: status
+      - name: qualifying
