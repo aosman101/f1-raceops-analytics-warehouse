@@ -1,0 +1,137 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">F1 RaceOps Analytics Warehouse End-to-End Architecture</title>
+  <desc id="desc">Architecture flow from source data through local runtime, warehouse layers, governance, and Tableau consumption.</desc>
+
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f8fafc" />
+      <stop offset="100%" stop-color="#eef2ff" />
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#334155" />
+    </marker>
+    <style>
+      .title { font: 700 34px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .group-title { font: 700 17px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .node-title { font: 700 14px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .node-text { font: 500 12px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .group {
+        stroke: #cbd5e1;
+        stroke-width: 2;
+        rx: 18;
+        ry: 18;
+      }
+      .node {
+        fill: #ffffff;
+        stroke: #94a3b8;
+        stroke-width: 1.5;
+        rx: 12;
+        ry: 12;
+      }
+      .flow {
+        stroke: #334155;
+        stroke-width: 2.2;
+        fill: none;
+        marker-end: url(#arrow);
+      }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="900" fill="url(#bg)" />
+
+  <text x="36" y="48" class="title">F1 RaceOps Analytics Warehouse</text>
+  <text x="36" y="76" class="subtitle">End-to-end local-first data pipeline and BI delivery flow</text>
+
+  <rect class="group" x="30" y="100" width="240" height="760" fill="#e0f2fe" />
+  <text x="50" y="132" class="group-title">Source Data</text>
+
+  <rect class="node" x="55" y="190" width="190" height="110" />
+  <text x="150" y="222" text-anchor="middle" class="node-title">Ergast Dump</text>
+  <text x="150" y="247" text-anchor="middle" class="node-text">CSV / SQL extract</text>
+  <text x="150" y="267" text-anchor="middle" class="node-text">(Race OptiData)</text>
+
+  <rect class="group" x="290" y="100" width="360" height="760" fill="#ecfccb" />
+  <text x="310" y="132" class="group-title">Local Runtime</text>
+
+  <rect class="node" x="320" y="150" width="140" height="72" />
+  <text x="390" y="180" text-anchor="middle" class="node-title">.env</text>
+  <text x="390" y="200" text-anchor="middle" class="node-text">Runtime config</text>
+
+  <rect class="node" x="480" y="150" width="140" height="72" />
+  <text x="550" y="180" text-anchor="middle" class="node-title">Docker Compose</text>
+  <text x="550" y="200" text-anchor="middle" class="node-text">Service runtime</text>
+
+  <rect class="node" x="320" y="252" width="300" height="74" />
+  <text x="470" y="282" text-anchor="middle" class="node-title">Makefile Targets</text>
+  <text x="470" y="302" text-anchor="middle" class="node-text">up, ingest, dbt-build, docs</text>
+
+  <rect class="node" x="320" y="362" width="300" height="84" />
+  <text x="470" y="392" text-anchor="middle" class="node-title">Postgres 16 Container</text>
+  <text x="470" y="412" text-anchor="middle" class="node-text">Local warehouse database</text>
+
+  <rect class="node" x="320" y="490" width="300" height="102" />
+  <text x="470" y="522" text-anchor="middle" class="node-title">Python Ingest Script</text>
+  <text x="470" y="542" text-anchor="middle" class="node-text">load_ergast_csvs.py</text>
+  <text x="470" y="562" text-anchor="middle" class="node-text">stages source into raw schema</text>
+
+  <rect class="group" x="680" y="100" width="330" height="760" fill="#ede9fe" />
+  <text x="700" y="132" class="group-title">Warehouse Layers (dbt)</text>
+
+  <rect class="node" x="715" y="186" width="260" height="74" />
+  <text x="845" y="216" text-anchor="middle" class="node-title">raw schema</text>
+  <text x="845" y="236" text-anchor="middle" class="node-text">loaded source tables</text>
+
+  <rect class="node" x="715" y="292" width="260" height="84" />
+  <text x="845" y="322" text-anchor="middle" class="node-title">staging models</text>
+  <text x="845" y="342" text-anchor="middle" class="node-text">type + key normalization</text>
+
+  <rect class="node" x="715" y="408" width="260" height="84" />
+  <text x="845" y="438" text-anchor="middle" class="node-title">intermediate models</text>
+  <text x="845" y="458" text-anchor="middle" class="node-text">reusable business logic</text>
+
+  <rect class="node" x="715" y="524" width="260" height="84" />
+  <text x="845" y="554" text-anchor="middle" class="node-title">analytics marts</text>
+  <text x="845" y="574" text-anchor="middle" class="node-text">dashboard-ready KPIs</text>
+
+  <rect class="group" x="1040" y="100" width="240" height="760" fill="#fef3c7" />
+  <text x="1060" y="132" class="group-title">Governance</text>
+
+  <rect class="node" x="1065" y="238" width="190" height="74" />
+  <text x="1160" y="268" text-anchor="middle" class="node-title">dbt Tests</text>
+  <text x="1160" y="288" text-anchor="middle" class="node-text">quality checks</text>
+
+  <rect class="node" x="1065" y="344" width="190" height="74" />
+  <text x="1160" y="374" text-anchor="middle" class="node-title">dbt Docs + Lineage</text>
+  <text x="1160" y="394" text-anchor="middle" class="node-text">model transparency</text>
+
+  <rect class="node" x="1065" y="450" width="190" height="74" />
+  <text x="1160" y="480" text-anchor="middle" class="node-title">KPI Dictionary</text>
+  <text x="1160" y="500" text-anchor="middle" class="node-text">README/docs contract</text>
+
+  <rect class="group" x="1305" y="100" width="265" height="760" fill="#fee2e2" />
+  <text x="1325" y="132" class="group-title">Consumption</text>
+
+  <rect class="node" x="1338" y="322" width="200" height="84" />
+  <text x="1438" y="352" text-anchor="middle" class="node-title">Tableau Workbook</text>
+  <text x="1438" y="372" text-anchor="middle" class="node-text">twb / twbx</text>
+
+  <rect class="node" x="1338" y="438" width="200" height="84" />
+  <text x="1438" y="468" text-anchor="middle" class="node-title">Tableau Public</text>
+  <text x="1438" y="488" text-anchor="middle" class="node-text">published dashboard</text>
+
+  <path class="flow" d="M 245 245 L 300 245 L 300 540 L 320 540" />
+  <path class="flow" d="M 390 222 L 390 252" />
+  <path class="flow" d="M 550 222 L 550 362" />
+  <path class="flow" d="M 470 326 L 470 490" />
+  <path class="flow" d="M 620 404 L 715 223" />
+  <path class="flow" d="M 620 540 L 715 223" />
+  <path class="flow" d="M 845 260 L 845 292" />
+  <path class="flow" d="M 845 376 L 845 408" />
+  <path class="flow" d="M 845 492 L 845 524" />
+  <path class="flow" d="M 975 566 L 1065 275" />
+  <path class="flow" d="M 975 566 L 1065 381" />
+  <path class="flow" d="M 975 566 L 1065 487" />
+  <path class="flow" d="M 975 566 L 1338 364" />
+  <path class="flow" d="M 1438 406 L 1438 438" />
+</svg>

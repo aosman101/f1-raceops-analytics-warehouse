@@ -49,50 +49,9 @@ Target outcomes:
 - A portfolio-ready Tableau project with transparent metric definitions
 
 ## End-to-End Architecture
-```mermaid
-flowchart LR
-  subgraph Source["Source Data"]
-    S1["Ergast-compatible dump (CSV/SQL)"]
-  end
+![End-to-end architecture diagram](docs/images/end-to-end-architecture.svg)
 
-  subgraph LocalRuntime["Local Runtime"]
-    E1[".env / .env.example"]
-    D1["docker-compose.yml"]
-    P1[("Postgres 16 container")]
-    I1["Python ingest script\n(ingest/load_ergast_csvs.py)"]
-    M1["Makefile orchestration"]
-  end
-
-  subgraph Warehouse["Warehouse Layers"]
-    R1[("raw schema")]
-    ST1["dbt staging models\nstandardized types and keys"]
-    IN1["dbt intermediate models\nbusiness logic prep"]
-    MA1["dbt marts\nanalytics schema"]
-  end
-
-  subgraph Governance["Quality and Documentation"]
-    T1["dbt tests\nunique / not_null / relationships"]
-    DOC1["dbt docs + lineage"]
-    DD1["KPI dictionary in README/docs"]
-  end
-
-  subgraph BI["Consumption"]
-    B1["Tableau workbook (.twb/.twbx)"]
-    B2["Tableau Public dashboard"]
-  end
-
-  S1 --> I1
-  E1 --> M1
-  D1 --> P1
-  M1 --> I1
-  I1 --> R1
-  P1 --> R1
-  R1 --> ST1 --> IN1 --> MA1
-  MA1 --> T1
-  MA1 --> DOC1
-  MA1 --> DD1
-  MA1 --> B1 --> B2
-```
+Architecture asset: `docs/images/end-to-end-architecture.svg`
 
 ## Current Repository Status
 Implemented now:
@@ -100,6 +59,7 @@ Implemented now:
 - Schema initialization SQL
 - Makefile command surface
 - Initial documentation framework
+- End-to-end architecture diagram asset
 
 Not yet implemented:
 - Ingestion script logic
