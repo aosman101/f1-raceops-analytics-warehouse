@@ -12,10 +12,10 @@
 [![License](https://img.shields.io/badge/License-TBD-9CA3AF)](#license)
 
 Local-first Formula 1 analytics warehouse focused on RaceOps performance:
-- Faster and more reliable pit stop analysis
-- Strategy signal proxies
-- Constructor and driver reliability insights
-- Tableau-first storytelling layer for decision-ready views
+- Enhanced and dependable pit stop analysis.
+- Strategy signal indicators.
+- Insights into the constructor and driver reliability.
+- Tableau-focused storytelling layer for decision-ready views.
 
 > This README is a living document. It is intentionally detailed now and will be updated as implementation progresses.
 
@@ -38,15 +38,15 @@ Local-first Formula 1 analytics warehouse focused on RaceOps performance:
 
 ## Project Objectives
 Build an end-to-end analytics project that demonstrates:
-- Data engineering: controlled ingestion into Postgres raw schemas
-- Analytics engineering: dbt layer design, tests, docs, and marts
-- BI delivery: Tableau dashboards with consistent KPI logic and drill paths
-- Reproducibility: local environment via Docker Compose + environment-managed config
+- Data engineering: controlled ingestion into Postgres raw schemas.
+- Analytics engineering: dbt layer design, tests, docs, and marts.
+- BI delivery: Tableau dashboards with consistent KPI logic and drill paths.
+- Reproducibility: local environment via Docker Compose + environment-managed config.
 
 Target outcomes:
-- Reliable baseline F1 operational KPIs across seasons and constructors
-- Reusable marts for analysis and dashboarding
-- A portfolio-ready Tableau project with transparent metric definitions
+- Reliable baseline F1 operational KPIs across seasons and constructors.
+- Reusable marts for analysis and dashboarding.
+- A portfolio-ready Tableau project with transparent metric definitions.
 
 ## End-to-End Architecture
 ![End-to-end architecture diagram](docs/images/end-to-end-architecture.svg)
@@ -55,11 +55,11 @@ Architecture asset: `docs/images/end-to-end-architecture.svg`
 
 ## Current Repository Status
 Implemented now:
-- Bootstrap configuration and local infrastructure files
-- Schema initialization SQL
-- Makefile command surface
-- Initial documentation framework
-- End-to-end architecture diagram asset
+- Bootstrap configuration and local infrastructure files.
+- Schema initialisation SQL.
+- Makefile command surface.
+- Initial documentation framework.
+- End-to-end architecture diagram asset.
 
 Not yet implemented:
 - Ingestion script logic
@@ -72,7 +72,7 @@ Not yet implemented:
 - Transformations: dbt Core (Postgres profile)
 - Ingestion: Python (`psycopg2-binary`, `python-dotenv`)
 - Orchestration (local): `make` targets
-- Visualization: Tableau (primary BI tool)
+- Visualisation: Tableau (primary BI tool)
 - Source control: Git + GitHub
 
 ## Data Source and Assumptions
@@ -90,7 +90,7 @@ Layering strategy:
   - Direct loaded source tables
   - Minimal transformation
 - `staging` models (dbt)
-  - Type normalization, key casting, naming cleanup, null handling
+  - Type normalisation, key casting, naming cleanup, null handling
 - `intermediate` models (dbt)
   - Reusable joins and race/session-level derived logic
 - `analytics` marts (dbt)
@@ -99,7 +99,7 @@ Layering strategy:
 Design principles:
 - Stable grains per model
 - Explicit primary and foreign key relationships where applicable
-- Deterministic KPI logic defined once in marts, consumed directly in Tableau
+- Deterministic KPI logic defined once in Marts, consumed directly in Tableau
 
 ## Planned Marts and KPI Definitions
 `mart_pitstop_performance`
@@ -128,7 +128,7 @@ Design principles:
 
 Notes:
 - Exact KPI formulas may evolve after profiling source quality and edge cases.
-- Metric definitions should be versioned in this README (or companion docs) as they stabilize.
+- Metric definitions should be versioned in this README (or companion docs) as they stabilise.
 
 ## Tableau Deliverables
 Planned Tableau outputs:
@@ -142,7 +142,7 @@ Planned Tableau outputs:
 
 Planned Tableau interactions:
 - Season, constructor, driver filters
-- Drill-down from season to race-level records
+- Drill down from season to race-level records
 - Tooltip definitions that map directly to warehouse KPI logic
 
 Publication target:
@@ -180,7 +180,7 @@ Available commands:
 - `make up`: start Postgres container
 - `make down`: stop and remove running compose services
 - `make logs`: stream Postgres logs
-- `make psql`: open interactive `psql` in the container
+- `make psql`: open an interactive `psql` in the container
 - `make ingest`: planned CSV ingestion entry point
 - `make dbt-deps`: install dbt packages (when dbt project exists)
 - `make dbt-build`: run dbt models/tests/docs build flow
@@ -188,7 +188,7 @@ Available commands:
 - `make dbt-docs`: generate and serve dbt docs locally
 
 ## Roadmap
-- [x] Initialize repository docs and local config bootstrap
+- [x] Initialise repository docs and local config bootstrap
 - [x] Add Docker Compose + schema initialization
 - [x] Add environment templates and local Make targets
 - [ ] Implement ingestion script (`ingest/load_ergast_csvs.py`)
@@ -196,14 +196,14 @@ Available commands:
 - [ ] Build staging models and baseline tests
 - [ ] Build marts for pit stop, reliability, and constructor ops KPIs
 - [ ] Publish dbt docs + lineage
-- [ ] Build Tableau workbook and publish Tableau Public dashboard
+- [ ] Build a Tableau workbook and publish a Tableau Public dashboard
 - [ ] Add CI checks for lint/tests/build workflow
 
 ## Testing and Data Quality Plan
 Data quality checks (planned):
 - Source-to-raw row count reconciliation
 - Required key null checks
-- Duplicate primary key checks at each modeled grain
+- Duplicate primary key checks at each modelled grain
 - Relationship tests between core entities
 - Metric sanity checks for distributions and outliers
 
