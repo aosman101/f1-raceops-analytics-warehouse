@@ -1,23 +1,23 @@
-name: f1_raceops_analytics
+name: f1_raceops
 version: "1.0.0"
 config-version: 2
 
-profile: f1_raceops_analytics
+profile: f1_raceops
 
 model-paths: ["models"]
 macro-paths: ["macros"]
 seed-paths: ["seeds"]
-snapshot-paths: ["snapshots"]
-analysis-paths: ["analyses"]
-test-paths: ["tests"]
 
+target-path: "target"
 clean-targets:
   - "target"
   - "dbt_packages"
 
 models:
-  f1_raceops_analytics:
+  f1_raceops:
     staging:
       +materialized: view
+      +schema: staging
     marts:
       +materialized: table
+      +schema: analytics
