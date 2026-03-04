@@ -1,230 +1,117 @@
-# F1 RaceOps Analytics Warehouse (Postgres + dbt + Tableau)
+# F1 RaceOps Analytics Warehouse
 
-[![Status](https://img.shields.io/badge/Status-In%20Progress-F59E0B)](#roadmap)
-[![Python](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Postgres](https://img.shields.io/badge/Postgres-16-336791?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![dbt Core](https://img.shields.io/badge/dbt_Core-1.8%2B-FF694B?logo=dbt&logoColor=white)](https://docs.getdbt.com/docs/core/connect-data-platform/postgres-setup)
-[![Docker Compose](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](https://docs.docker.com/compose/)
-[![Tableau](https://img.shields.io/badge/Tableau-Primary%20BI-E97627?logo=tableau&logoColor=white)](https://www.tableau.com/)
-[![Data Source](https://img.shields.io/badge/Data-Ergast%202024-111827)](https://www.raceoptidata.com/ergast_dump.html)
-[![CI](https://img.shields.io/badge/CI-Not%20Configured-9CA3AF)](https://github.com/aosman101/f1-raceops-analytics-warehouse/actions)
-[![Coverage](https://img.shields.io/badge/Coverage-Not%20Tracked-9CA3AF)](#testing-and-data-quality-plan)
-[![License](https://img.shields.io/badge/License-TBD-9CA3AF)](#license)
+Local-first Formula 1 analytics warehouse built with Postgres, Python ingestion, dbt, and Tableau-ready marts.
 
-Local-first Formula 1 analytics warehouse focused on RaceOps performance:
-- Enhanced and dependable pit stop analysis.
-- Strategy signal indicators.
-- Insights into the constructor and driver reliability.
-- Tableau-focused storytelling layer for decision-ready views.
+## Project Status
+Core pipeline is implemented:
+- Local Postgres environment (Docker Compose)
+- Ergast ingestion (CSV loader + SQL dump loader)
+- dbt staging, core dimensions/facts, and RaceOps marts
+- Basic CI for dbt parse on push/PR
 
-> This README is a living document. It is intentionally detailed now and will be updated as implementation progresses.
+Still open:
+- Expanded dbt test coverage and KPI documentation
+- Published Tableau dashboard link
+- License file
 
-## Contents
-- [Project objectives](#project-objectives)
-- [End-to-end architecture](#end-to-end-architecture)
-- [Current repository status](#current-repository-status)
-- [Tech stack](#tech-stack)
-- [Data source and assumptions](#data-source-and-assumptions)
-- [Planned warehouse model](#planned-warehouse-model)
-- [Planned marts and KPI definitions](#planned-marts-and-kpi-definitions)
-- [Tableau deliverables](#tableau-deliverables)
-- [Local development setup](#local-development-setup)
-- [Make targets](#make-targets)
-- [Roadmap](#roadmap)
-- [Testing and data quality plan](#testing-and-data-quality-plan)
-- [Known gaps](#known-gaps)
-- [License](#license)
-- [Attribution](#attribution)
-
-## Project Objectives
-Build an end-to-end analytics project that demonstrates:
-- Data engineering: controlled ingestion into Postgres raw schemas.
-- Analytics engineering: dbt layer design, tests, docs, and marts.
-- BI delivery: Tableau dashboards with consistent KPI logic and drill paths.
-- Reproducibility: local environment via Docker Compose + environment-managed config.
-
-Target outcomes:
-- Reliable baseline F1 operational KPIs across seasons and constructors.
-- Reusable marts for analysis and dashboarding.
-- A portfolio-ready Tableau project with transparent metric definitions.
-
-## End-to-End Architecture
+## Architecture
 ![End-to-end architecture diagram](docs/images/end-to-end-architecture.svg)
 
-Architecture asset: `docs/images/end-to-end-architecture.svg`
-
-## Current Repository Status
-Implemented now:
-- Bootstrap configuration and local infrastructure files.
-- Schema initialisation SQL.
-- Makefile command surface.
-- Initial documentation framework.
-- End-to-end architecture diagram asset.
-
-Not yet implemented:
-- Ingestion script logic
-- dbt project folder and models
-- Tableau workbook and published dashboard link
-- CI workflow and automated validation
+Flow: Ergast source files -> `raw` schema -> dbt `staging` + `analytics` models -> Tableau dashboards.
 
 ## Tech Stack
-- Storage and compute: Postgres 16 (Docker container)
-- Transformations: dbt Core (Postgres profile)
-- Ingestion: Python (`psycopg2-binary`, `python-dotenv`)
-- Orchestration (local): `make` targets
-- Visualisation: Tableau (primary BI tool)
-- Source control: Git + GitHub
+- Postgres 16
+- Python 3.11+ (`psycopg2-binary`, `python-dotenv`)
+- dbt Core (`dbt-postgres`)
+- Docker Compose
+- Tableau
 
-## Data Source and Assumptions
-Primary dataset:
-- Ergast-compatible F1 historical dataset: <https://www.raceoptidata.com/ergast_dump.html>
+## Repository Layout
+- `ingest/`: CSV and SQL-dump loaders
+- `sql/init/`: schema bootstrap SQL (`raw`, `analytics`)
+- `dbt/`: dbt project (staging, core, raceops marts, macros)
+- `dashboards/tableau/`: Tableau workbook artifacts
+- `docs/`: architecture and KPI notes
 
-Assumptions:
-- Data is ingested in local development from extracted files under `data/raw/`
-- Raw layer preserves source grain and original values as much as possible
-- Business-ready semantics are introduced in dbt staging/intermediate/marts layers
+## Quickstart
 
-## Planned Warehouse Model
-Layering strategy:
-- `raw` schema
-  - Direct loaded source tables
-  - Minimal transformation
-- `staging` models (dbt)
-  - Type normalisation, key casting, naming cleanup, null handling
-- `intermediate` models (dbt)
-  - Reusable joins and race/session-level derived logic
-- `analytics` marts (dbt)
-  - Dashboard-facing fact-like and dimension-like curated models
-
-Design principles:
-- Stable grains per model
-- Explicit primary and foreign key relationships where applicable
-- Deterministic KPI logic defined once in Marts, consumed directly in Tableau
-
-## Planned Marts and KPI Definitions
-`mart_pitstop_performance`
-- Grain: constructor x race (rollups to season)
-- Core metrics:
-  - `pit_time_median_sec`
-  - `pit_time_p10_sec`
-  - `pit_time_p90_sec`
-  - `pit_stop_count`
-
-`mart_reliability`
-- Grain: constructor x season (with driver drilldowns)
-- Core metrics:
-  - `dnf_rate`
-  - `mechanical_dnf_count`
-  - `points_lost_proxy`
-
-`mart_constructor_ops_season`
-- Grain: constructor x season
-- Core metrics:
-  - `total_points`
-  - `wins`
-  - `podiums`
-  - `avg_grid_position`
-  - `avg_finish_position`
-
-Notes:
-- Exact KPI formulas may evolve after profiling source quality and edge cases.
-- Metric definitions should be versioned in this README (or companion docs) as they stabilise.
-
-## Tableau Deliverables
-Planned Tableau outputs:
-- Executive overview dashboard
-  - Constructor ops summary by season
-  - KPI scorecards and trend lines
-- Pit stop analysis dashboard
-  - Distribution bands, outlier races, team comparisons
-- Reliability and strategy dashboard
-  - DNF patterns, likely points impact, race context filters
-
-Planned Tableau interactions:
-- Season, constructor, driver filters
-- Drill down from season to race-level records
-- Tooltip definitions that map directly to warehouse KPI logic
-
-Publication target:
-- Tableau Public link: `TBD`
-
-## Local Development Setup
-Prerequisites:
+### 1) Prerequisites
 - Docker + Docker Compose
 - Python 3.11+
 - `make`
+- dbt Core + `dbt-postgres` available in your environment
 
-Environment setup:
+### 2) Configure environment
 ```bash
 cp .env.example .env
 ```
 
-Start local Postgres:
+### 3) Start Postgres
 ```bash
 make up
 ```
 
-Verify schema bootstrap:
+### 4) Load source data
+CSV path (default in Makefile):
 ```bash
-make psql
+make ingest
+```
+This expects extracted CSV files under `data/raw/ergast_2024`.
+
+SQL dump alternative:
+```bash
+bash ingest/load_sql_dump.sh path/to/ergast_dump.sql
 ```
 
-Inside `psql`, run:
-```sql
-\dn
+### 5) Build analytics models
+```bash
+make dbt-deps
+make dbt-build
+make dbt-test
 ```
-Expected schemas include `raw` and `analytics`.
 
-## Make Targets
-Available commands:
-- `make up`: start Postgres container
-- `make down`: stop and remove running compose services
-- `make logs`: stream Postgres logs
-- `make psql`: open an interactive `psql` in the container
-- `make ingest`: planned CSV ingestion entry point
-- `make dbt-deps`: install dbt packages (when dbt project exists)
-- `make dbt-build`: run dbt models/tests/docs build flow
-- `make dbt-test`: execute dbt tests
-- `make dbt-docs`: generate and serve dbt docs locally
+### 6) Optional: serve dbt docs
+```bash
+make dbt-docs
+```
 
-## Roadmap
-- [x] Initialise repository docs and local config bootstrap
-- [x] Add Docker Compose + schema initialization
-- [x] Add environment templates and local Make targets
-- [ ] Implement ingestion script (`ingest/load_ergast_csvs.py`)
-- [ ] Add dbt project scaffold and profiles
-- [ ] Build staging models and baseline tests
-- [ ] Build marts for pit stop, reliability, and constructor ops KPIs
-- [ ] Publish dbt docs + lineage
-- [ ] Build a Tableau workbook and publish a Tableau Public dashboard
-- [ ] Add CI checks for lint/tests/build workflow
+## Warehouse Model Overview
 
-## Testing and Data Quality Plan
-Data quality checks (planned):
-- Source-to-raw row count reconciliation
-- Required key null checks
-- Duplicate primary key checks at each modelled grain
-- Relationship tests between core entities
-- Metric sanity checks for distributions and outliers
+### Staging (`schema: staging`, materialized as views)
+Standardizes Ergast source tables:
+`circuits`, `constructors`, `drivers`, `races`, `results`, `pit_stops`, `lap_times`, `qualifying`, `status`.
 
-Testing layers:
-- Ingestion script validation (load counts and exceptions)
-- dbt generic and singular tests
-- Smoke checks before Tableau refresh
+### Core (`schema: analytics`, materialized as tables)
+Dimensions:
+- `dim_driver`
+- `dim_constructor`
+- `dim_circuit`
+- `dim_race`
+- `dim_status`
 
-Current status:
-- CI not configured
-- Coverage not tracked
-- Manual validation only
+Facts:
+- `fct_race_results`
+- `fct_pit_stops`
+- `fct_lap_times`
+- `fct_qualifying`
 
-## Known Gaps
-- No ingestion implementation committed yet
-- No dbt project directory committed yet
-- No Tableau workbook/dashboard link committed yet
-- License file not added yet
+### RaceOps Marts (`schema: analytics`, materialized as tables)
+- `mart_pitstop_performance`: pit stop distribution metrics by season and constructor.
+- `mart_reliability`: DNF rate and points-lost estimate by season and constructor.
+- `mart_constructor_ops_season`: season-level constructor performance summary.
+- `mart_driver_ops_season`: season-level driver performance summary.
 
-## License
-License is currently `TBD`. Until a license file is added, all rights are reserved by default.
+## CI and Data Quality
+- GitHub Actions runs `dbt parse` on pushes to `main` and pull requests.
+- dbt tests are executable via `make dbt-test`.
+- Comprehensive schema/relationship tests are not fully defined yet.
+
+## Tableau
+Store Tableau files in `dashboards/tableau/` (for example `f1-raceops-analytics.twbx`).
+Public dashboard link is not published yet.
 
 ## Attribution
-- Dataset source: Ergast-compatible dump by Race OptiData
+- Data source: Ergast-compatible dataset from Race OptiData: https://www.raceoptidata.com/ergast_dump.html
+
+## License
+License is currently TBD (no license file committed yet).
