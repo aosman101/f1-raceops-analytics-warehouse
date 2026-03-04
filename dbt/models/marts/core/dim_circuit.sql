@@ -1,4 +1,1 @@
-{{ config(materialized='table') }}
-
-select *
-from {{ ref('stg_ergast__circuits') }}
+select * from {{ ref('stg_ergast__circuits') }};
