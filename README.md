@@ -1,6 +1,6 @@
 # F1 RaceOps Analytics Warehouse
 
-Local-first Formula 1 analytics warehouse built with Postgres, Python ingestion, dbt, and Tableau-ready marts.
+A local-first analytics warehouse for Formula 1, built using Postgres, Python for data ingestion, dbt for transformation, and ready for Tableau marts.
 
 ## Project Status
 The core pipeline has been implemented with the following components: 
@@ -112,6 +112,3 @@ The public dashboard link has not been published yet.
 
 ## Attribution
 - Data source: Ergast-compatible dataset from Race OptiData: https://www.raceoptidata.com/ergast_dump.html
-
-## License
-This project is licensed under the MIT License. See [LICENSE](LICENSE).
