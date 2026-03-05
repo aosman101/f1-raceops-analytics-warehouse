@@ -12,7 +12,7 @@ The core pipeline has been implemented with the following components:
 Still open:
 - Expanded dbt test coverage and KPI documentation.
 - Published Tableau dashboard link.
-- License file.
+- MIT license file.
 
 ## Architecture
 ![End-to-end architecture diagram](docs/images/end-to-end-architecture.svg)
@@ -114,4 +114,4 @@ The public dashboard link has not been published yet.
 - Data source: Ergast-compatible dataset from Race OptiData: https://www.raceoptidata.com/ergast_dump.html
 
 ## License
-The license is currently to be determined (no license file has been committed yet).
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
