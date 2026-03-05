@@ -3,16 +3,16 @@
 Local-first Formula 1 analytics warehouse built with Postgres, Python ingestion, dbt, and Tableau-ready marts.
 
 ## Project Status
-Core pipeline is implemented:
-- Local Postgres environment (Docker Compose)
-- Ergast ingestion (CSV loader + SQL dump loader)
-- dbt staging, core dimensions/facts, and RaceOps marts
-- Basic CI for dbt parse on push/PR
+The core pipeline has been implemented with the following components: 
+- A local PostgreSQL environment using Docker Compose.
+- Ergast data ingestion through CSV and SQL dump loaders.
+- dbt staging along with core dimensions, facts, and RaceOps marts.
+- Basic CI for dbt parse upon push or pull request.
 
 Still open:
-- Expanded dbt test coverage and KPI documentation
-- Published Tableau dashboard link
-- License file
+- Expanded dbt test coverage and KPI documentation.
+- Published Tableau dashboard link.
+- License file.
 
 ## Architecture
 ![End-to-end architecture diagram](docs/images/end-to-end-architecture.svg)
@@ -30,7 +30,7 @@ Flow: Ergast source files -> `raw` schema -> dbt `staging` + `analytics` models 
 - `ingest/`: CSV and SQL-dump loaders
 - `sql/init/`: schema bootstrap SQL (`raw`, `analytics`)
 - `dbt/`: dbt project (staging, core, raceops marts, macros)
-- `dashboards/tableau/`: Tableau workbook artifacts
+- `dashboards/tableau/`: Tableau workbook artefacts
 - `docs/`: architecture and KPI notes
 
 ## Quickstart
@@ -77,11 +77,11 @@ make dbt-docs
 
 ## Warehouse Model Overview
 
-### Staging (`schema: staging`, materialized as views)
-Standardizes Ergast source tables:
+### Staging (`schema: staging`, materialised as views)
+Standardises Ergast source tables:
 `circuits`, `constructors`, `drivers`, `races`, `results`, `pit_stops`, `lap_times`, `qualifying`, `status`.
 
-### Core (`schema: analytics`, materialized as tables)
+### Core (`schema: analytics`, materialised as tables)
 Dimensions:
 - `dim_driver`
 - `dim_constructor`
@@ -95,7 +95,7 @@ Facts:
 - `fct_lap_times`
 - `fct_qualifying`
 
-### RaceOps Marts (`schema: analytics`, materialized as tables)
+### RaceOps Marts (`schema: analytics`, materialised as tables)
 - `mart_pitstop_performance`: pit stop distribution metrics by season and constructor.
 - `mart_reliability`: DNF rate and points-lost estimate by season and constructor.
 - `mart_constructor_ops_season`: season-level constructor performance summary.
@@ -108,10 +108,10 @@ Facts:
 
 ## Tableau
 Store Tableau files in `dashboards/tableau/` (for example `f1-raceops-analytics.twbx`).
-Public dashboard link is not published yet.
+The public dashboard link has not been published yet.
 
 ## Attribution
 - Data source: Ergast-compatible dataset from Race OptiData: https://www.raceoptidata.com/ergast_dump.html
 
 ## License
-License is currently TBD (no license file committed yet).
+The license is currently to be determined (no license file has been committed yet).
