@@ -9,4 +9,4 @@ select
   q.q3_ms
 from {{ ref('stg_ergast__qualifying') }} q
 join {{ ref('stg_ergast__races') }} r
-  on q.race_id = r.race_id;
+  on q.race_id = r.race_id

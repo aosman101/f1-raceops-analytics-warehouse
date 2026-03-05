@@ -1,1 +1,1 @@
-select * from {{ ref('stg_ergast__constructors') }};
+select * from {{ ref('stg_ergast__constructors') }}

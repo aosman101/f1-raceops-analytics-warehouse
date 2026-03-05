@@ -40,4 +40,4 @@ from results r
 left join dnf_points_lost p
   on r.season_year = p.season_year
  and r.constructor_id = p.constructor_id
-group by 1,2, p.points_lost_estimate;
+group by 1,2, p.points_lost_estimate

@@ -15,4 +15,4 @@ select
   percentile_cont(0.1) within group (order by pit_ms) as p10_pit_ms,
   percentile_cont(0.9) within group (order by pit_ms) as p90_pit_ms
 from base
-group by 1,2;
+group by 1,2

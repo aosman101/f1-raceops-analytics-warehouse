@@ -35,4 +35,4 @@ from {{ ref('stg_ergast__results') }} res
 join {{ ref('stg_ergast__races') }} r
   on res.race_id = r.race_id
 left join {{ ref('stg_ergast__status') }} s
-  on res.status_id = s.status_id;
+  on res.status_id = s.status_id

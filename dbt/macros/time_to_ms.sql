@@ -1,18 +1,19 @@
 {% macro time_to_ms(time_str) %}
     -- Converts 'M:SS.mmm' or 'SS.mmm' to milliseconds (INTEGER)
-    -- Returns NULL if input is NULL/empty.
+    -- Returns NULL if input is NULL/empty/'NULL'/\N.
+    {% set cleaned_time = ergast_text_or_null(time_str) %}
     case
-      when {{ time_str }} is null or nullif({{ time_str }}, '') is null then null
-      when position(':' in {{ time_str }}) > 0 then
+      when {{ cleaned_time }} is null then null
+      when position(':' in {{ cleaned_time }}) > 0 then
         (
-          split_part({{ time_str }}, ':', 1)::int * 60 * 1000
-          + floor(split_part(split_part({{ time_str }}, ':', 2), '.', 1)::numeric * 1000)::int
-          + right(split_part({{ time_str }}, '.', 2), 3)::int
+          split_part({{ cleaned_time }}, ':', 1)::int * 60 * 1000
+          + floor(split_part(split_part({{ cleaned_time }}, ':', 2), '.', 1)::numeric * 1000)::int
+          + right(split_part({{ cleaned_time }}, '.', 2), 3)::int
         )
       else
         (
-          floor(split_part({{ time_str }}, '.', 1)::numeric * 1000)::int
-          + right(split_part({{ time_str }}, '.', 2), 3)::int
+          floor(split_part({{ cleaned_time }}, '.', 1)::numeric * 1000)::int
+          + right(split_part({{ cleaned_time }}, '.', 2), 3)::int
         )
     end
 {% endmacro %}

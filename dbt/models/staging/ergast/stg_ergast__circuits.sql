@@ -4,8 +4,8 @@ select
   name as circuit_name,
   location,
   country,
-  nullif(lat, '')::numeric as lat,
-  nullif(lng, '')::numeric as lng,
-  nullif(alt, '')::int as alt,
+  {{ ergast_text_or_null("lat") }}::numeric as lat,
+  {{ ergast_text_or_null("lng") }}::numeric as lng,
+  {{ ergast_text_or_null("alt") }}::int as alt,
   url
-from {{ source('ergast', 'circuits') }};
+from {{ source('ergast', 'circuits') }}

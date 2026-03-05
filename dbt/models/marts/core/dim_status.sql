@@ -1,1 +1,1 @@
-select * from {{ ref('stg_ergast__status') }};
+select * from {{ ref('stg_ergast__status') }}

@@ -10,4 +10,4 @@ select
   r.race_time
 from {{ ref('stg_ergast__races') }} r
 left join {{ ref('stg_ergast__circuits') }} c
-  on r.circuit_id = c.circuit_id;
+  on r.circuit_id = c.circuit_id

@@ -1,11 +1,11 @@
 select
   driver_id::int as driver_id,
   driver_ref,
-  nullif(number, '')::int as driver_number,
-  nullif(code, '') as driver_code,
+  {{ ergast_text_or_null("number") }}::int as driver_number,
+  {{ ergast_text_or_null("code") }} as driver_code,
   forename,
   surname,
-  nullif(dob, '')::date as dob,
+  {{ ergast_text_or_null("dob") }}::date as dob,
   nationality,
   url
-from {{ source('ergast', 'drivers') }};
+from {{ source('ergast', 'drivers') }}

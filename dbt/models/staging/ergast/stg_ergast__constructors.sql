@@ -4,4 +4,4 @@ select
   name as constructor_name,
   nationality,
   url
-from {{ source('ergast', 'constructors') }};
+from {{ source('ergast', 'constructors') }}

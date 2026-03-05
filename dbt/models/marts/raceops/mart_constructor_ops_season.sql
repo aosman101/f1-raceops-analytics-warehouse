@@ -30,4 +30,4 @@ from res
 left join pit
   on res.season_year = pit.season_year
  and res.constructor_id = pit.constructor_id
-group by 1,2, pit.pit_stops, pit.avg_pit_ms;
+group by 1,2, pit.pit_stops, pit.avg_pit_ms

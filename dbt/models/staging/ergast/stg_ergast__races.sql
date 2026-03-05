@@ -5,6 +5,6 @@ select
   circuit_id::int as circuit_id,
   name as race_name,
   date::date as race_date,
-  nullif(replace(time, 'Z', ''), '')::time as race_time,
+  {{ ergast_text_or_null("replace(time, 'Z', '')") }}::time as race_time,
   url
-from {{ source('ergast', 'races') }};
+from {{ source('ergast', 'races') }}

@@ -3,5 +3,5 @@ select
   driver_id::int as driver_id,
   lap::int as lap,
   position::int as position,
-  nullif(milliseconds, '')::int as lap_ms
-from {{ source('ergast', 'lap_times') }};
+  {{ ergast_text_or_null("milliseconds") }}::int as lap_ms
+from {{ source('ergast', 'lap_times') }}

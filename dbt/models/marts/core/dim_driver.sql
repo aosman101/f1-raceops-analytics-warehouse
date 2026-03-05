@@ -1,1 +1,1 @@
-select * from {{ ref('stg_ergast__drivers') }};
+select * from {{ ref('stg_ergast__drivers') }}
