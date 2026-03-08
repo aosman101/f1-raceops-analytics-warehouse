@@ -1,6 +1,6 @@
 # F1 RaceOps Analytics Warehouse
 
-A local-first analytics warehouse for Formula 1, built using Postgres, Python for data ingestion, dbt for transformation, and ready for Tableau marts.
+A local-first analytics warehouse for Formula 1 is built on Postgres, with Python for data ingestion and dbt for transformation, and is ready for Tableau marts.
 
 ## Project Status
 The core pipeline has been implemented with the following components: 
@@ -27,11 +27,11 @@ Flow: Ergast source files -> `raw` schema -> dbt `staging` + `analytics` models 
 - Tableau
 
 ## Repository Layout
-- `ingest/`: CSV and SQL-dump loaders
-- `sql/init/`: schema bootstrap SQL (`raw`, `analytics`)
-- `dbt/`: dbt project (staging, core, raceops marts, macros)
-- `dashboards/tableau/`: Tableau workbook artefacts
-- `docs/`: architecture and KPI notes
+- `ingest/`: CSV and SQL-dump loaders.
+- `sql/init/`: schema bootstrap SQL (`raw`, `analytics`).
+- `dbt/`: dbt project (staging, core, raceops marts, macros).
+- `dashboards/tableau/`: Tableau workbook artefacts.
+- `docs/`: architecture and KPI notes.
 
 ## Quickstart
 
