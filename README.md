@@ -12,7 +12,6 @@ The core pipeline has been implemented with the following components:
 Still open:
 - Expanded dbt test coverage and KPI documentation.
 - Published Tableau dashboard link.
-- MIT license file.
 
 ## Architecture
 ![End-to-end architecture diagram](docs/images/end-to-end-architecture.svg)

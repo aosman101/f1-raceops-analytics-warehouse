@@ -1,5 +1,6 @@
 # Python
 .venv/
+.venv*/
 __pycache__/
 *.pyc
 
@@ -16,6 +17,11 @@ data/raw/
 dbt/target/
 dbt/dbt_packages/
 dbt/logs/
+dbt/.user.yml
+
+# Local runtime logs
+logs/
+*.log
 
 # OS / editor
 .DS_Store
