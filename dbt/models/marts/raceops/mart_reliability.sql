@@ -34,10 +34,10 @@ select
   (sum(r.is_dnf)::numeric / nullif(count(*), 0)) as dnf_rate,
 
   sum(r.points) as total_points,
-  coalesce(p.points_lost_estimate, 0) as points_lost_estimate
+  coalesce(max(p.points_lost_estimate), 0) as points_lost_estimate
 
 from results r
 left join dnf_points_lost p
   on r.season_year = p.season_year
  and r.constructor_id = p.constructor_id
-group by 1,2, p.points_lost_estimate
+group by 1,2

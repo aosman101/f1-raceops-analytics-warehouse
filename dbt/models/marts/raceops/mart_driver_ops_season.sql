@@ -23,11 +23,11 @@ select
   avg(res.grid_position)::numeric(10,2) as avg_grid,
   avg(res.position_order)::numeric(10,2) as avg_finish,
 
-  coalesce(pit.pit_stops, 0) as pit_stops,
-  coalesce(pit.avg_pit_ms, null) as avg_pit_ms
+  coalesce(max(pit.pit_stops), 0) as pit_stops,
+  max(pit.avg_pit_ms) as avg_pit_ms
 
 from res
 left join pit
   on res.season_year = pit.season_year
  and res.driver_id = pit.driver_id
-group by 1,2, pit.pit_stops, pit.avg_pit_ms
+group by 1,2
