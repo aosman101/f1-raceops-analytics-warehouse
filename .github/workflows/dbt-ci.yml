@@ -1,24 +1,54 @@
 name: dbt-ci
 
 on:
-  push:
-    branches: ["main"]
   pull_request:
+  push:
+    branches: [ "main" ]
 
 jobs:
-  dbt-parse:
+  dbt:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: f1_raceops
+          POSTGRES_USER: f1
+          POSTGRES_PASSWORD: f1_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U f1 -d f1_raceops"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      PGHOST: localhost
+      PGPORT: 5432
+      PGDATABASE: f1_raceops
+      PGUSER: f1
+      PGPASSWORD: f1_password
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
       - name: Install dbt
-        run: pip install dbt-postgres
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install dbt-core dbt-postgres
 
-      - name: Parse dbt project
-        run: dbt parse --project-dir dbt --profiles-dir dbt
+      - name: dbt deps
+        run: |
+          cd dbt
+          dbt deps --profiles-dir .
+
+      - name: dbt compile (no raw data in CI)
+        run: |
+          cd dbt
+          dbt compile --profiles-dir .
