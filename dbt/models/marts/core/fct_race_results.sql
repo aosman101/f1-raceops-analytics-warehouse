@@ -1,4 +1,5 @@
 select
+  res.result_id,
   r.race_id,
   r.season_year,
   r.round,

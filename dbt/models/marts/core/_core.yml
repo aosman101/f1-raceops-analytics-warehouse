@@ -50,13 +50,16 @@ models:
           - unique
 
   - name: fct_race_results
-    description: Grain - one row per driver per race. Adds is_win, is_podium, is_dnf, is_classified_finish flags.
-    tests:
-      - dbt_utils.unique_combination_of_columns:
-          combination_of_columns:
-            - race_id
-            - driver_id
+    description: >
+      Grain - one row per Ergast result_id. Usually one row per (race_id, driver_id),
+      but the 1950s era (Indianapolis 500, shared drives) has multiple rows when a
+      driver changed cars mid-race. Adds is_win, is_podium, is_dnf, is_classified_finish flags.
     columns:
+      - name: result_id
+        description: Ergast result primary key - the true grain of this table.
+        tests:
+          - not_null
+          - unique
       - name: race_id
         tests:
           - not_null
