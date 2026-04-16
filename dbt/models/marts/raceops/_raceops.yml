@@ -1,0 +1,139 @@
+version: 2
+
+models:
+  - name: mart_pitstop_performance
+    description: >
+      Pit stop distribution per constructor per season. Percentiles computed across
+      every stop the constructor made that season. Use for benchmarking pit crew speed.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - season_year
+            - constructor_id
+    columns:
+      - name: season_year
+        description: Championship year.
+        tests:
+          - not_null
+      - name: constructor_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_constructor')
+              field: constructor_id
+      - name: pit_stop_count
+        description: Number of pit stops with a non-null duration.
+        tests:
+          - not_null
+      - name: avg_pit_ms
+        description: Arithmetic mean stop duration in milliseconds.
+      - name: median_pit_ms
+        description: Median (p50) stop duration in milliseconds.
+      - name: p10_pit_ms
+        description: 10th percentile stop duration - the fastest stops.
+      - name: p90_pit_ms
+        description: 90th percentile stop duration - the slowest / outlier stops.
+
+  - name: mart_reliability
+    description: >
+      DNF rate and an expected-points-lost proxy per constructor per season.
+      Expected points for a grid slot is the mean points scored from that slot
+      by classified finishers that season.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - season_year
+            - constructor_id
+    columns:
+      - name: season_year
+        tests:
+          - not_null
+      - name: constructor_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_constructor')
+              field: constructor_id
+      - name: race_entries
+        description: Total driver race entries for the constructor that season.
+        tests:
+          - not_null
+      - name: dnf_count
+        description: Number of DNF / not-classified entries.
+        tests:
+          - not_null
+      - name: dnf_rate
+        description: dnf_count / race_entries. Ranges 0-1.
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+              inclusive: true
+      - name: total_points
+        description: Constructor's scored championship points.
+      - name: points_lost_estimate
+        description: Sum of (expected points from grid - actual points) across DNFs.
+
+  - name: mart_constructor_ops_season
+    description: Season-level constructor performance summary - points, wins, podiums, DNFs, pit volume.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - season_year
+            - constructor_id
+    columns:
+      - name: season_year
+        tests:
+          - not_null
+      - name: constructor_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_constructor')
+              field: constructor_id
+      - name: points
+        description: Total points scored across all constructor drivers.
+      - name: wins
+        description: Count of 1st-place finishes.
+      - name: podiums
+        description: Count of top-3 finishes.
+      - name: dnfs
+        description: Count of not-classified entries.
+      - name: avg_grid
+        description: Mean grid position across all constructor entries.
+      - name: avg_finish
+        description: Mean finish position (position_order) across all constructor entries.
+      - name: pit_stops
+        description: Total pit stops made that season.
+      - name: avg_pit_ms
+        description: Mean pit stop duration that season.
+
+  - name: mart_driver_ops_season
+    description: Season-level driver performance summary - points, wins, podiums, DNFs, pit volume.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - season_year
+            - driver_id
+    columns:
+      - name: season_year
+        tests:
+          - not_null
+      - name: driver_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_driver')
+              field: driver_id
+      - name: points
+        description: Total points scored by the driver that season.
+      - name: wins
+        description: Driver's count of 1st-place finishes.
+      - name: podiums
+        description: Driver's count of top-3 finishes.
+      - name: dnfs
+        description: Driver's count of not-classified entries.
+      - name: avg_grid
+      - name: avg_finish
+      - name: pit_stops
+      - name: avg_pit_ms

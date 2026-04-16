@@ -1,0 +1,182 @@
+version: 2
+
+models:
+  - name: dim_driver
+    description: Driver dimension - one row per driver.
+    columns:
+      - name: driver_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_constructor
+    description: Constructor (team) dimension - one row per constructor.
+    columns:
+      - name: constructor_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_circuit
+    description: Circuit dimension - one row per track with geographic metadata.
+    columns:
+      - name: circuit_id
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_race
+    description: Race dimension - one row per championship race with circuit context.
+    columns:
+      - name: race_id
+        tests:
+          - not_null
+          - unique
+      - name: season_year
+        tests:
+          - not_null
+      - name: circuit_id
+        tests:
+          - relationships:
+              to: ref('dim_circuit')
+              field: circuit_id
+
+  - name: dim_status
+    description: Race finish / retirement status lookup.
+    columns:
+      - name: status_id
+        tests:
+          - not_null
+          - unique
+
+  - name: fct_race_results
+    description: Grain - one row per driver per race. Adds is_win, is_podium, is_dnf, is_classified_finish flags.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - race_id
+            - driver_id
+    columns:
+      - name: race_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_race')
+              field: race_id
+      - name: driver_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_driver')
+              field: driver_id
+      - name: constructor_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_constructor')
+              field: constructor_id
+      - name: status_id
+        tests:
+          - relationships:
+              to: ref('dim_status')
+              field: status_id
+      - name: is_win
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+              quote: false
+      - name: is_podium
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+              quote: false
+      - name: is_dnf
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+              quote: false
+      - name: is_classified_finish
+        tests:
+          - not_null
+          - accepted_values:
+              values: [0, 1]
+              quote: false
+
+  - name: fct_pit_stops
+    description: Grain - one row per pit stop event (race x driver x stop_number).
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - race_id
+            - driver_id
+            - stop_number
+    columns:
+      - name: race_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_race')
+              field: race_id
+      - name: driver_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_driver')
+              field: driver_id
+      - name: pit_ms
+        description: Pit stop duration in milliseconds. Nullable in source; cleaned per macro.
+
+  - name: fct_lap_times
+    description: Grain - one row per lap per driver per race.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - race_id
+            - driver_id
+            - lap
+    columns:
+      - name: race_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_race')
+              field: race_id
+      - name: driver_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_driver')
+              field: driver_id
+      - name: lap
+        tests:
+          - not_null
+
+  - name: fct_qualifying
+    description: Grain - one row per driver per qualifying session (race).
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - race_id
+            - driver_id
+    columns:
+      - name: race_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_race')
+              field: race_id
+      - name: driver_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_driver')
+              field: driver_id
+      - name: constructor_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_constructor')
+              field: constructor_id

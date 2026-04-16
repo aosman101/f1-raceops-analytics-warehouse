@@ -1,0 +1,129 @@
+version: 2
+
+models:
+  - name: stg_ergast__circuits
+    description: Typed and cleaned circuit reference.
+    columns:
+      - name: circuit_id
+        description: Ergast circuit primary key.
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_ergast__constructors
+    description: Typed and cleaned constructor (team) reference.
+    columns:
+      - name: constructor_id
+        description: Ergast constructor primary key.
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_ergast__drivers
+    description: Typed and cleaned driver reference with forename/surname.
+    columns:
+      - name: driver_id
+        description: Ergast driver primary key.
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_ergast__races
+    description: Typed race calendar with season_year, round, race_date.
+    columns:
+      - name: race_id
+        description: Ergast race primary key.
+        tests:
+          - not_null
+          - unique
+      - name: season_year
+        tests:
+          - not_null
+      - name: circuit_id
+        tests:
+          - relationships:
+              to: ref('stg_ergast__circuits')
+              field: circuit_id
+
+  - name: stg_ergast__results
+    description: Typed per-driver race result rows.
+    columns:
+      - name: result_id
+        description: Ergast result primary key.
+        tests:
+          - not_null
+          - unique
+      - name: race_id
+        tests:
+          - relationships:
+              to: ref('stg_ergast__races')
+              field: race_id
+      - name: driver_id
+        tests:
+          - relationships:
+              to: ref('stg_ergast__drivers')
+              field: driver_id
+      - name: constructor_id
+        tests:
+          - relationships:
+              to: ref('stg_ergast__constructors')
+              field: constructor_id
+      - name: status_id
+        tests:
+          - relationships:
+              to: ref('stg_ergast__status')
+              field: status_id
+
+  - name: stg_ergast__pit_stops
+    description: Typed pit stop events with millisecond duration.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - race_id
+            - driver_id
+            - stop_number
+    columns:
+      - name: race_id
+        tests:
+          - not_null
+      - name: driver_id
+        tests:
+          - not_null
+      - name: stop_number
+        tests:
+          - not_null
+
+  - name: stg_ergast__lap_times
+    description: Typed per-lap events.
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - race_id
+            - driver_id
+            - lap
+    columns:
+      - name: race_id
+        tests:
+          - not_null
+      - name: driver_id
+        tests:
+          - not_null
+      - name: lap
+        tests:
+          - not_null
+
+  - name: stg_ergast__qualifying
+    description: Typed qualifying results with Q1/Q2/Q3 milliseconds.
+    columns:
+      - name: qualify_id
+        tests:
+          - not_null
+          - unique
+
+  - name: stg_ergast__status
+    description: Typed status reference (Finished, Accident, Engine, etc.).
+    columns:
+      - name: status_id
+        tests:
+          - not_null
+          - unique

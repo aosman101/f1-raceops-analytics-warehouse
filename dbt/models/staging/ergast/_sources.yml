@@ -2,14 +2,120 @@ version: 2
 
 sources:
   - name: ergast
+    description: Raw Ergast-compatible F1 history loaded from CSV into Postgres `raw` schema. All columns are TEXT; staging models handle type casting and null normalisation.
     schema: raw
     tables:
       - name: circuits
+        description: F1 circuits with geographic metadata.
+        columns:
+          - name: circuit_id
+            description: Ergast primary key for the circuit.
+            tests:
+              - not_null
+              - unique
+
       - name: constructors
+        description: F1 constructors (teams) across all seasons.
+        columns:
+          - name: constructor_id
+            description: Ergast primary key for the constructor.
+            tests:
+              - not_null
+              - unique
+
       - name: drivers
+        description: F1 drivers across all seasons.
+        columns:
+          - name: driver_id
+            description: Ergast primary key for the driver.
+            tests:
+              - not_null
+              - unique
+
       - name: races
+        description: One row per championship race.
+        columns:
+          - name: race_id
+            description: Ergast primary key for the race.
+            tests:
+              - not_null
+              - unique
+          - name: year
+            tests:
+              - not_null
+          - name: circuit_id
+            tests:
+              - not_null
+              - relationships:
+                  to: source('ergast', 'circuits')
+                  field: circuit_id
+
       - name: results
+        description: Driver-level race result rows, one per driver per race.
+        columns:
+          - name: result_id
+            description: Ergast primary key for the result row.
+            tests:
+              - not_null
+              - unique
+          - name: race_id
+            tests:
+              - not_null
+              - relationships:
+                  to: source('ergast', 'races')
+                  field: race_id
+          - name: driver_id
+            tests:
+              - not_null
+              - relationships:
+                  to: source('ergast', 'drivers')
+                  field: driver_id
+          - name: constructor_id
+            tests:
+              - not_null
+              - relationships:
+                  to: source('ergast', 'constructors')
+                  field: constructor_id
+          - name: status_id
+            tests:
+              - not_null
+              - relationships:
+                  to: source('ergast', 'status')
+                  field: status_id
+
       - name: pit_stops
+        description: Pit stop events with millisecond duration.
+        columns:
+          - name: race_id
+            tests:
+              - not_null
+          - name: driver_id
+            tests:
+              - not_null
+
       - name: lap_times
+        description: Per-lap position and lap time in milliseconds.
+        columns:
+          - name: race_id
+            tests:
+              - not_null
+          - name: driver_id
+            tests:
+              - not_null
+
       - name: qualifying
+        description: Qualifying session results (Q1/Q2/Q3 times and final position).
+        columns:
+          - name: qualify_id
+            tests:
+              - not_null
+              - unique
+
       - name: status
+        description: Lookup of race finish/retirement statuses (e.g. Finished, Accident, Engine).
+        columns:
+          - name: status_id
+            description: Ergast primary key for the status code.
+            tests:
+              - not_null
+              - unique
