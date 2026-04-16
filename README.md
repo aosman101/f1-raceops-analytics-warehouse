@@ -1,17 +1,42 @@
 # F1 RaceOps Analytics Warehouse
 
+[![CI](https://github.com/aosman101/f1-raceops-analytics-warehouse/actions/workflows/dbt-ci.yml/badge.svg)](https://github.com/aosman101/f1-raceops-analytics-warehouse/actions/workflows/dbt-ci.yml)
+![Python 3.11+](https://img.shields.io/badge/Python-3.11%2B-3776AB?logo=python&logoColor=white)
+![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
+![dbt Core 1.11](https://img.shields.io/badge/dbt%20Core-1.11-FF694B?logo=dbt&logoColor=white)
+![Docker Compose](https://img.shields.io/badge/Docker%20Compose-local%20runtime-2496ED?logo=docker&logoColor=white)
+![Tableau](https://img.shields.io/badge/Tableau-Desktop%20%2F%20Public-E97627?logo=tableau&logoColor=white)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+
 A local-first Formula 1 analytics warehouse built on PostgreSQL, with Python for data ingestion, dbt for transformation, and Tableau-ready marts.
 
 ## Project Status
 
-End-to-end pipeline is green:
+Completed project scope:
 
 - Local PostgreSQL environment via Docker Compose.
 - Ergast data ingestion (CSV and SQL dump loaders).
 - Full dbt layer: 9 staging views, 9 core dimension/fact tables, 4 RaceOps marts.
 - dbt tests: 124 generic tests (uniqueness, not-null, referential integrity, accepted ranges).
 - GitHub Actions CI that parses and compiles all models on push and pull request.
-- Tableau publishing guide: [`dashboards/tableau/README.md`](dashboards/tableau/README.md).
+- Tableau workbook outputs and exported portfolio visuals in [`dashboards/tableau/`](dashboards/tableau/).
+
+## Portfolio Highlights
+
+This repo is structured as an end-to-end analytics project: ingestion, warehouse modelling, testing, and presentation. The Tableau layer turns the warehouse marts into racing-operations views focused on pit execution, reliability, seasonal scorecards, and racecraft.
+
+Exported visuals live in [`dashboards/tableau/exports/`](dashboards/tableau/exports/):
+
+- [`Tableau Homepage.png`](dashboards/tableau/exports/Tableau%20Homepage.png)
+- [`Pit Speed.png`](dashboards/tableau/exports/Pit%20Speed.png)
+- [`Reliability.png`](dashboards/tableau/exports/Reliability.png)
+- [`Constructor Scorecard.png`](dashboards/tableau/exports/Constructor%20Scorecard.png)
+- [`Driver Scorecard.png`](dashboards/tableau/exports/Driver%20Scorecard.png)
+- [`Constructor Points Trend.png`](dashboards/tableau/exports/Constructor%20Points%20Trend.png)
+- [`Points Lost To Reliability.png`](dashboards/tableau/exports/Points%20Lost%20To%20Reliability.png)
+- [`Racecraft Scatter.png`](dashboards/tableau/exports/Racecraft%20Scatter.png)
+
+Tableau overview and local reproduction notes: [`dashboards/tableau/README.md`](dashboards/tableau/README.md).
 
 ## Architecture
 
@@ -35,7 +60,7 @@ Full architecture notes: [`docs/architecture.md`](docs/architecture.md).
 - `ingest/`: CSV and SQL-dump loaders.
 - `sql/init/`: schema bootstrap SQL (creates `raw`, `staging`, `analytics`).
 - `dbt/`: dbt project (staging, core, raceops marts, macros, schema tests).
-- `dashboards/tableau/`: Tableau workbook artefacts and publishing guide.
+- `dashboards/tableau/`: Tableau README plus exported screenshots and workbook artefacts.
 - `docs/`: architecture diagram, KPI dictionary.
 
 ## Quickstart
@@ -128,7 +153,7 @@ Metric definitions: [`docs/kpi_dictionary.md`](docs/kpi_dictionary.md).
 
 ## Tableau
 
-Connect Tableau Desktop to the `f1_raceops` database, schema `analytics`, to access the four RaceOps marts. Full step-by-step with driver install, connection params, worksheet recipes, and publishing options: [`dashboards/tableau/README.md`](dashboards/tableau/README.md).
+The Tableau layer is complete and documented in [`dashboards/tableau/README.md`](dashboards/tableau/README.md). It covers the final portfolio views, screenshot exports, and the minimal steps needed to reconnect Tableau Desktop to the local `analytics` schema.
 
 ## Attribution
 
