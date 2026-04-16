@@ -6,11 +6,13 @@ Plain-English definitions for every metric published in the RaceOps marts. All m
 
 Grain: one row per (season, constructor). Percentiles are computed across every pit stop the constructor made that season where `pit_ms is not null`.
 
+**Important definition**: `pit_ms` in Ergast is the **full pit-lane transit time** (pit entry to pit exit), not the stationary tire change. TV broadcasts report the 2-3 second stationary portion; Ergast values are typically 20-30 seconds because they include the speed-limited drive down pit lane.
+
 | Metric | Definition | Unit | Notes |
 | --- | --- | --- | --- |
 | `pit_stop_count` | Number of timed pit stops the constructor made that season. | count | Pit stop timing only exists from 2011 onward; earlier seasons return 0 rows. |
-| `avg_pit_ms` | Arithmetic mean stop duration. | milliseconds | Sensitive to slow outliers; use `median_pit_ms` for a typical-case read. |
-| `median_pit_ms` | p50 stop duration. | milliseconds | Recommended headline metric for pit crew speed. |
+| `avg_pit_ms` | Arithmetic mean pit-lane transit time. | milliseconds | Sensitive to slow outliers; use `median_pit_ms` for a typical-case read. |
+| `median_pit_ms` | p50 pit-lane transit time. | milliseconds | Recommended headline metric for pit crew speed. |
 | `p10_pit_ms` | 10th percentile - the fastest tenth of stops. | milliseconds | Approximates the crew's ceiling under ideal conditions. |
 | `p90_pit_ms` | 90th percentile - the slowest tenth. | milliseconds | Long tail caused by wheel gun issues, jacks, driver overshoots. |
 
