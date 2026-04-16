@@ -48,6 +48,15 @@ jobs:
           cd dbt
           dbt deps --profiles-dir .
 
+      - name: Create warehouse schemas
+        run: |
+          psql "postgres://f1:f1_password@localhost:5432/f1_raceops" -f sql/init/00_create_schemas.sql
+
+      - name: dbt parse (validates models, sources, tests, macros)
+        run: |
+          cd dbt
+          dbt parse --profiles-dir .
+
       - name: dbt compile (no raw data in CI)
         run: |
           cd dbt
